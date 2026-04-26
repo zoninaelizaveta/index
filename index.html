@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>ПростоСайт — адаптивная страница</title>
+  <style>
+    /* Сброс стилей — самый минимум */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      line-height: 1.5;
+      padding: 16px;
+    }
+
+    /* Главный контейнер — белая карточка */
+    .page {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      padding: 24px 20px 32px;
+    }
+
+    /* Заголовок */
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+      color: #0f2b3d;
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 28px; }
+    }
+
+    .subhead {
+      text-align: center;
+      color: #5c6b7a;
+      font-size: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e9ecef;
+    }
+
+    /* Секции */
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #1e4663;
+    }
+
+    /* Карточки (гибкая сетка — на телефоне колонка, на десктопе в ряд) */
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: #f8fafd;
+      flex: 1 1 180px;
+      min-width: 140px;
+      padding: 16px;
+      border-radius: 20px;
+      transition: 0.2s;
+      border: 1px solid #e2e8f0;
+    }
+
+    .card:hover {
+      background: white;
+      border-color: #cbdff2;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #4a5b6e;
+    }
+
+    /* Форма — всё в колонку на телефоне, в строку на широком экране */
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    input {
+      flex: 2;
+      min-width: 160px;
+      padding: 14px 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 60px;
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+      background: white;
+    }
+
+    input:focus {
+      border-color: #2c7da0;
+      box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+    }
+
+    button {
+      background: #2c7da0;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 60px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+      min-width: 120px;
+    }
+
+    button:active {
+      background: #1f5e7a;
+      transform: scale(0.97);
+    }
+
+    /* кнопка на телефоне удобная */
+    @media (max-width: 500px) {
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+      .form-row {
+        flex-direction: column;
+      }
+      input {
+        width: 100%;
+      }
+    }
+
+    /* Блок контактов — гибкий */
+    .contacts {
+      background: #f1f5f9;
+      border-radius: 24px;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 8px 0;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      background: white;
+      padding: 8px 16px;
+      border-radius: 40px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    @media (max-width: 480px) {
+      .contacts { flex-direction: column; }
+      .contact-item { justify-content: center; }
+    }
+
+    /* Кнопка наверх (простая) */
+    .go-top {
+      position: fixed;
+      bottom: 24px;
+      right: 20px;
+      background: #2c7da0;
+      color: white;
+      width: 48px;
+      height: 48px;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border: none;
+      z-index: 99;
+    }
+    .go-top.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* маленькое уведомление */
+    .toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e2a3a;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 60px;
+      font-size: 14px;
+      pointer-events: none;
+      opacity: 0;
+      transition: 0.2s;
+      z-index: 1000;
+      white-space: nowrap;
+    }
+    @media (max-width: 500px) {
+      .toast { white-space: normal; text-align: center; width: 80%; font-size: 13px; }
+    }
+    .toast.show-toast {
+      opacity: 1;
+    }
+
+    footer {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 13px;
+      color: #8a99aa;
+      padding-top: 16px;
+      border-top: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <h1>✨ ПростоSite</h1>
+  <div class="subhead">Адаптивная страница — отлично выглядит на телефоне и компьютере</div>
+
+  <!-- Блок 1: О нас -->
+  <div class="section">
+    <div class="section-title">
+      <span>📱💻</span> Для любых устройств
+    </div>
+    <p style="margin-bottom: 12px;">Этот сайт автоматически подстраивается под ширину экрана. Попробуйте изменить размер окна браузера или откройте на смартфоне — всё будет удобно.</p>
+  </div>
+
+  <!-- Блок 2: Карточки (гибкий ряд) -->
+  <div class="section">
+    <div class="section-title">
+      <span>🌟</span> Что мы предлагаем
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h3>📱 Мобильно</h3>
+        <p>Кнопки и текст читаются без缩放 (зума), всё под рукой.</p>
+      </div>
+      <div class="card">
+        <h3>💻 Десктоп</h3>
+        <p>На большом экране контент красиво распределяется в строку.</p>
+      </div>
+      <div class="card">
+        <h3>⚡ Быстро</h3>
+        <p>Минимум кода — максимум скорости загрузки.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Блок 3: Подписка / форма (максимально простая) -->
+  <div class="section">
+    <div class="section-title">
+      <span>✉️</span> Будем на связи
+    </div>
+    <p style="margin-bottom: 12px;">Оставьте email — пришлем полезные советы по адаптивному дизайну.</p>
+    <div class="form-row">
+      <input type="email" id="emailInput" placeholder="Ваш email" autocomplete="email">
+      <button id="subscribeBtn">Подписаться</button>
+    </div>
+  </div>
+
+  <!-- Блок 4: Контакты (просто и понятно) -->
+  <div class="section">
+    <div class="section-title">
+      <span>📞</span> Контакты
+    </div>
+    <div class="contacts">
+      <div class="contact-item">📧 hello@prostosite.ru</div>
+      <div class="contact-item">📱 +7 (999) 123-45-67</div>
+      <div class="contact-item">📢 @simple_site</div>
+    </div>
+  </div>
+
+  <!-- Небольшой блок с цитатой -->
+  <div style="background: #eef3fc; border-radius: 20px; padding: 16px; margin: 20px 0 8px; text-align: center;">
+    “Простота и адаптивность — ключ к хорошему сайту”
+  </div>
+
+  <footer>
+    © 2025 ПростоСайт — одна страница, которая работает везде
+  </footer>
+</div>
+
+<!-- Кнопка "наверх" (удобно на телефоне) -->
+<button class="go-top" id="goTopBtn">↑</button>
+
+<!-- Тост уведомление -->
+<div id="toastMsg" class="toast">👍 Готово!</div>
+
+<script>
+  // Упрощённая функция уведомления
+  function showMessage(text) {
+    const toast = document.getElementById('toastMsg');
+    toast.textContent = text;
+    toast.classList.add('show-toast');
+    setTimeout(() => {
+      toast.classList.remove('show-toast');
+    }, 2000);
+  }
+
+  // Подписка (имитация)
+  const subBtn = document.getElementById('subscribeBtn');
+  const emailField = document.getElementById('emailInput');
+
+  subBtn.addEventListener('click', () => {
+    const email = emailField.value.trim();
+    if (!email) {
+      showMessage('📧 Напишите email');
+      emailField.focus();
+      return;
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      showMessage('❌ Укажите корректный email (пример: name@mail.ru)');
+      return;
+    }
+    showMessage(`✅ Спасибо, ${email}! Вы в списке.`);
+    emailField.value = '';
+  });
+
+  // Кнопка "наверх" — появляется при скролле
+  const goTopBtn = document.getElementById('goTopBtn');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 250) {
+      goTopBtn.classList.add('show');
+    } else {
+      goTopBtn.classList.remove('show');
+    }
+  });
+  goTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Простое улучшение для касаний на мобильных: убираем залипание активного состояния
+  const allBtns = document.querySelectorAll('button');
+  allBtns.forEach(btn => {
+    btn.addEventListener('touchstart', function(e) {
+      // просто для отзывчивости (без задержки), визуально приятнее
+      this.style.transform = 'scale(0.97)';
+      setTimeout(() => { this.style.transform = ''; }, 120);
+    });
+  });
+
+  // Добавим метку о том, что ширина окна выводится в консоль (для проверки адаптивности)
+  window.addEventListener('resize', () => {
+    // Необязательно: можно вывести ширину в консоль, но не мешаем пользователю
+    console.log(`Ширина экрана: ${window.innerWidth}px — адаптивность работает`);
+  });
+  console.log(`Сайт готов. Ширина: ${window.innerWidth}px (адаптивный режим)`);
+</script>
+</body>
+</html>
